@@ -1,0 +1,239 @@
+body {
+	font-family: "Inter", sans-serif;
+}
+.card-container {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(800px, 1fr));
+	gap: 15px;
+	margin: 24px;
+}
+.card {
+	width: auto;
+	height: auto;
+	border: 0.5px solid #eff6ff;
+	border-radius: 10px;
+	padding: 24px;
+	box-shadow: 0 0 0 1px #0e3f7e0a, 0 1px 1px -0.5px #2a33450a, 0 3px 3px -1.5px #2a33460a,
+		0 6px 6px -3px #2a33460a, 0 6px 8px -6px #0e3f7e0a, 0 4px 4px -12px #0e3f7e0a;
+}
+.card-id {
+	font-size: 20px;
+	font-weight: bold;
+}
+.card-title {
+	font-size: 32px;
+	font-weight: bold;
+	color: #2286f9;
+	margin-bottom: 40px;
+	margin-top: 0;
+}
+.card-header {
+	font-size: 20px;
+	font-weight: bold;
+	margin-bottom: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+}
+.price-btn {
+	font-size: 14px;
+	font-weight: 500;
+	background-color: #2286f9;
+	color: #fff;
+	padding: 10px 12px;
+	border-radius: 4px;
+	border: none;
+	cursor: pointer;
+	text-transform: capitalize;
+	margin-top: 12px;
+}
+.flex {
+	display: flex;
+}
+.items-center {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+.flex-end {
+	display: flex;
+	align-items: center;
+	justify-content: end;
+}
+.flex-between {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.flex-between-end {
+	display: flex;
+	align-items: end;
+	justify-content: space-between;
+}
+.flex-col {
+	display: flex;
+	flex-direction: column;
+}
+.items-start {
+	display: flex;
+	align-items: center;
+	justify-content: start;
+}
+.green {
+	color: green;
+}
+.featues {
+	font-size: 12px;
+	font-weight: 500;
+	max-width: 210px;
+}
+.price {
+	font-size: 28px;
+	font-weight: bold;
+	color: #1d1d1d;
+	margin-top: 10px;
+}
+.mb-0 {
+	margin-bottom: 0;
+}
+.mt-0 {
+	margin-top: 0;
+}
+.w-full {
+	width: 100%;
+}
+.card-image {
+	width: 250px;
+	height: 250px;
+	min-width: 250px;
+	border-radius: 8px;
+	overflow: hidden;
+	margin-right: 32px;
+}
+.card-image img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+p {
+	color: #4f4f4f;
+}
+h1,
+h2,
+h3,
+h4 {
+	color: #1d1d1d;
+}
+.search {
+	border-bottom: 1px solid #eff6ff;
+	padding-bottom: 24px;
+	margin-bottom: 24px;
+	display: flex;
+	flex-wrap: wrap;
+	width: 100%;
+	flex-direction: row;
+}
+.input-group {
+	padding: 10px;
+	font-size: 12px;
+}
+.input-group label {
+	display: block;
+	margin-bottom: 5px;
+}
+.container-bk {
+	padding: 24px;
+}
+.input-bk {
+	border: 1px solid #aaa;
+	border-radius: 4px;
+	padding: 8px 12px;
+	font-size: 14px;
+	font-weight: 500;
+	color: #1d1d1d;
+	background-color: #fff;
+}
+
+button {
+	background: #21364b;
+	border-radius: 8px;
+	color: white;
+	border: 0;
+	padding: 12px 16px;
+	margin-top: 16px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	display: inline-block;
+}
+#loader {
+	display: none;
+	background-color: yellow;
+	padding: 10px;
+	text-align: center;
+}
+#rates {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Adds space between cards */
+    padding: 20px;
+}
+
+.rate-card {
+    background: #f0f0f0; /* Light grey background */
+    border: 1px solid #ccc; /* Grey border */
+    border-radius: 8px; /* Rounded corners */
+    padding: 20px;
+    width: 300px; /* Fixed width, but can be adjusted or made responsive */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow */
+}
+
+.rate-card h4 {
+    color: #333; /* Dark grey color for text */
+    margin-bottom: 5px;
+}
+
+.rate-card p {
+    color: #666; /* Lighter text color for details */
+    margin: 5px 0;
+}
+
+.rate-card button {
+    background-color: #4CAF50; /* Green background */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 0;
+    cursor: pointer;
+    border-radius: 4px; /* Rounded button edges */
+}
+.price-btn {
+    margin-top: 10px; 
+    margin-right: 10px; 
+}
+.price-btn {
+    display: inline-block;
+    background-color: #007bff; /* Example color */
+    color: white;
+    font-size: 16px; /* Ensures text size is sufficient */
+    /* text-align: center; Horizontally centers text */
+    text-decoration: none; /* Removes underline from links */
+    border: none;
+    border-radius: 5px; /* Rounded corners for aesthetics */
+    cursor: pointer; /* Makes it clear it's clickable */
+    line-height: 1.5; /* Helps vertically center the text, adjust based on your font size and padding */
+    width: auto; /* Ensures the button width is based on content + padding */
+    box-sizing: border-box; /* Ensures padding is included in width/height calculations */
+	display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.price-btn:hover {
+    background-color: #0056b3; /* Darker shade for hover effect */
+}

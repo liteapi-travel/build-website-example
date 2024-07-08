@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Hotel Booking</title>
+	<link rel="stylesheet" href="styles.css" />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet" />
+	<script src="https://payment-wrapper.liteapi.travel/dist/liteAPIPayment.js?a=11"></script>
+	<script>
+		function initializePaymentForm(clientSecret, prebookId, transactionId, guestFirstName, guestLastName, guestEmail) {
+			const environment = document.getElementById("environment").value;
+			const publicKey = environment === "sandbox" ? "sandbox" : "live";
+
+			console.log("initializePaymentForm", publicKey);
+			liteAPIConfig = {
+				publicKey: publicKey,
+
+				appearance: {
+					theme: "flat",
+				},
+				options: {
+					business: {
+						name: "LiteAPI",
+					},
+				},
+				targetElement: "#pe",
+				/* amount: 150,
+			currency: "EUR", */
+				secretKey: `${clientSecret}`,
+				returnUrl: `http://localhost:3000/book/?prebookId=${prebookId}&transactionId=${transactionId}&guestFirstName=${encodeURIComponent(guestFirstName)}&guestLastName=${encodeURIComponent(guestLastName)}&guestEmail=${encodeURIComponent(guestEmail)}&environment=${encodeURIComponent(environment)}`,
+			};
+			liteAPIPayment = new LiteAPIPayment(liteAPIConfig);
+			liteAPIPayment.handlePayment();
+		}
+	</script>
+</head>
+
+<body>
+	<h1>Hotel by hotel</h1>
+	<div id="search" class="search">
+		<div class="input-group">
+			<label for="hotelId">Enter hotel Id</label>
+			<input type="text" class="input-bk" id="hotelId" value="lp3803c" />
+		</div>
+		<div class="input-group">
+			<label for="checkin">Check in (YYYY-MM-DD format)</label>
+			<input type="text" class="input-bk" id="checkin" value="2024-12-30" />
+		</div>
+		<div class="input-group">
+			<label for="checkout">Check out (YYYY-MM-DD format)</label>
+			<input type="text" class="input-bk" id="checkout" value="2024-12-31" />
+		</div>
+		<div class="input-group">
+			<label for="adults">Number of adult guests staying</label>
+			<input type="text" class="input-bk" id="adults" value="1" />
+		</div>
+		<div class="input-group">
+			<label for="environment">Select Environment</label>
+			<select id="environment" class="input-bk">
+				<option value="sandbox">Sandbox</option>
+				<option value="production">Production</option>
+			</select>
+		</div>
+		<button class="price-btn mt-0" onclick="searchHotelRate()">Search for rates</button>
+	</div>
+    
+	<div id="loader">Loading... Please wait.</div>
+	<div id="hotels"></div>
+	<div id="rates"></div>
+	<div id="payment-form"></div>
+	<div id="pe"></div>
+    <div id="errorMessage"></div>
+    <div id="paymentData"></div>
+	<script src="details.js"></script>
+</body>
+</html>
