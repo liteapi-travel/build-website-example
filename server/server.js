@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
-const liteApi = require("liteapi-travel");
+const liteApi = require("liteapi-node-sdk");
 const cors = require("cors");
 const path = require("path");
 require('dotenv').config()
@@ -14,16 +14,13 @@ app.use(
 
 const prod_apiKey = process.env.PROD_API_KEY; // Replace with your LiteAPI key
 const sandbox_apiKey = process.env.SAND_API_KEY; // Replace with your LiteAPI key
-console.log(process.env.SAND_API_KEY);
-
 app.use(bodyParser.json());
+
 
 app.get("/search-hotels", async (req, res) => {
 	console.log("Search endpoint hit");
 	const { checkin, checkout, adults, city, countryCode, environment } = req.query;
 	const apiKey = environment == "sandbox" ? sandbox_apiKey : prod_apiKey;
-
-	//console.log (apiKey, "apiKey");
 	const sdk = liteApi(apiKey);
 
 	try {
@@ -31,9 +28,15 @@ app.get("/search-hotels", async (req, res) => {
 		const data = (await response).data;
 		const hotelIds = data.map((hotel) => hotel.id);
 		const rates = (
-			await sdk.getFullRates(checkin, checkout, "USD", "US", hotelIds, adults)
+			await sdk.getFullRates({
+				hotelIds: hotelIds,
+				occupancies: [{ adults: parseInt(adults, 10) }],
+				currency: 'USD',
+				guestNationality: 'US',
+				checkin: checkin,
+				checkout: checkout
+			})
 		).data;
-
 		rates.forEach((rate) => {
 			rate.hotel = data.find((hotel) => hotel.id === rate.hotelId);
 		});
@@ -47,10 +50,8 @@ app.get("/search-hotels", async (req, res) => {
 
 app.get("/search-rates", async (req, res) => {
 	console.log("Rate endpoint hit");
-	console.log(req.query);
 	const { checkin, checkout, adults, hotelId, environment } = req.query;
 	const apiKey = environment === "sandbox" ? sandbox_apiKey : prod_apiKey;
-
 	const sdk = liteApi(apiKey);
 
 	try {
@@ -99,9 +100,6 @@ app.get("/search-rates", async (req, res) => {
 				}).filter(rate => rate !== null); // Filter out null values if no rates meet the criteria
 			})
 		);
-
-		console.log(rateInfo);
-
 		res.json({ hotelInfo, rateInfo });
 	} catch (error) {
 		console.error("Error fetching rates:", error);
@@ -110,8 +108,10 @@ app.get("/search-rates", async (req, res) => {
 });
 
 app.post("/prebook", async (req, res) => {
+	//console.log(req.body);
 	const { rateId, environment, voucherCode } = req.body;
 	const apiKey = environment === "sandbox" ? sandbox_apiKey : prod_apiKey;
+	const sdk = liteApi(apiKey);
 	//console.log(apiKey, "apiKey");
 	const bodyData = {
 		offerId: rateId,
@@ -123,7 +123,7 @@ app.post("/prebook", async (req, res) => {
 		bodyData.voucherCode = voucherCode;
 	}
 
-	const options = {
+/* 	const options = {
 		method: "POST",
 		headers: {
 			accept: "application/json",
@@ -131,20 +131,20 @@ app.post("/prebook", async (req, res) => {
 			"X-API-Key": apiKey,
 		},
 		body: JSON.stringify(bodyData),
-	};
-	console.log(options);
+	}; */
 	try {
-		fetch("https://book.liteapi.travel/v3.0/rates/prebook?timeout=4", options)
-			.then((response) => response.json())
-			.then((response) => {
-				console.log("Response:", response); // Print the response
-				res.json({ success: response });
+		// Call the SDK's prebook method and handle the response
+		sdk.preBook(bodyData)
+			.then(response => {
+				res.json({ success: response }); // Send response back to the client
 			})
-			.catch((err) => {
+			.catch(err => {
 				console.error("Error:", err); // Print the error if any
+				res.status(500).json({ error: "Internal Server Error" }); // Send error response
 			});
 	} catch (err) {
-		console.error("Fetch error:", err); // Handle fetch errors
+		console.error(" Prebook error:", err); // Handle errors related to SDK usage
+		res.status(500).json({ error: "Internal Server Error" }); // Send error response
 	}
 });
 
@@ -162,41 +162,34 @@ app.get("/book", (req, res) => {
 
 
 	const apiKey = environment === "sandbox" ? sandbox_apiKey : prod_apiKey;
+	const sdk = liteApi(apiKey);
 
-	const options = {
-		method: "POST",
-		headers: {
-			accept: "application/json",
-			"content-type": "application/json",
-			"X-API-Key": apiKey,
+
+	const bodyData = {
+		holder: {
+			firstName: guestFirstName,
+			lastName: guestLastName,
+			email: guestEmail,
 		},
-		body: JSON.stringify({
-			holder: {
+		payment: {
+			method: "TRANSACTION_ID",
+			transactionId: transactionId,
+		},
+		prebookId: prebookId,
+		guests: [
+			{
+				occupancyNumber: 1,
+				remarks: "",
 				firstName: guestFirstName,
 				lastName: guestLastName,
 				email: guestEmail,
 			},
-			payment: {
-				method: "TRANSACTION_ID",
-				transactionId: transactionId,
-			},
-			guests: [
-				{
-					occupancyNumber: 1,
-					remarks: "",
-					firstName: guestFirstName,
-					lastName: guestLastName,
-					email: guestEmail,
-				},
-			],
-			prebookId: prebookId,
-		}),
+		],
 	};
 
-	console.log(options);
+	console.log(bodyData)
 
-	fetch("https://book.liteapi.travel/v3.0/rates/book?timeout=4", options)
-		.then((response) => response.json())
+	sdk.book(bodyData)
 		.then((data) => {
 			if (!data || data.error) {  // Validate if there's any error in the data
 				throw new Error("Error in booking data: " + (data.error ? data.error.message : "Unknown error"));
