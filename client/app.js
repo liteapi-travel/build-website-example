@@ -23,6 +23,7 @@ async function searchHotels() {
 			`http://localhost:3000/search-hotels?checkin=${checkin}&checkout=${checkout}&adults=${adults}&city=${city}&countryCode=${countryCode}&environment=${environment}`
 		);
 		const rates = (await response.json()).rates;
+		console.log(rates);
 		displayRatesAndHotels(rates);
 
 		document.getElementById("loader").style.display = "none";
@@ -136,7 +137,6 @@ async function proceedToBooking(rateId) {
 
 		try {
 			// Include additional guest details in the payment processing request
-
 			const bodyData = {
 				environment,
 				rateId
@@ -160,6 +160,7 @@ async function proceedToBooking(rateId) {
 			console.log("preboook successful!", prebookData.success.data)
 			// Assuming prebookData.success.data includes the necessary fields
 			const paymentData = {
+				currency: prebookData.success.data.currency,
 				price: prebookData.success.data.price, // Ensure this field exists
 				voucherTotalAmount: prebookData.success.data.voucherTotalAmount // Ensure this field exists or use a default if optional
 			};
@@ -182,8 +183,8 @@ async function proceedToBooking(rateId) {
 }
 
 function displayPaymentInfo(data) {
-	console.log("displaty payment data function called)")
-	const paymentDiv = document.getElementById('hotelsDiv');
+	console.log("display payment data function called)")
+	const paymentDiv = document.getElementById('hotels');
 	if (!paymentDiv) {
 		console.error('paymentInfo div not found');
 		return;

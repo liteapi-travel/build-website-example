@@ -15,7 +15,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "liteapi-travel": "^2.0.5-updates",
+    "liteapi-node-sdk": "^3.0.4",
     "nodemon": "^3.1.4"
   }
 }
