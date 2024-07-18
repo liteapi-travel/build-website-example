@@ -42,6 +42,7 @@ function displayRatesAndHotels(rates) {
 			const currentAmount = current.rates[0].retailRate.total[0].amount;
 			return minAmount < currentAmount ? min : current;
 		});
+		console.log();
 
 		const hotelElement = document.createElement("div");
 		hotelElement.innerHTML = `
@@ -75,13 +76,12 @@ function displayRatesAndHotels(rates) {
 						</p>
 					</div>
 					<p class='flex flex-col mb-0'>
-						<span class=${minRate.rates[0].retailRate.total[0].amount} </span>
-						<button
-							class='price-btn'
-							onclick="proceedToBooking('${minRate.offerId}')">
-							BOOK NOW ${minRate.rates[0].retailRate.total[0].amount} ${minRate.rates[0].retailRate.total[0].currency
-			}
-						</button>
+    					<span class=${minRate.rates[0].retailRate.total[0].amount}></span>
+   						<span class=${minRate.rates[0].retailRate.suggestedSellingPrice[0].amount}></span>
+   						<button class='price-btn' onclick="proceedToBooking('${minRate.offerId}')">
+       						 <s>${minRate.rates[0].retailRate.suggestedSellingPrice[0].amount} ${minRate.rates[0].retailRate.suggestedSellingPrice[0].currency}</s>
+        					BOOK NOW ${minRate.rates[0].retailRate.total[0].amount} ${minRate.rates[0].retailRate.total[0].currency}
+    					</button>
 					</p>
 				</div>
 			</div>
