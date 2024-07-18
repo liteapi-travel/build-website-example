@@ -1,4 +1,4 @@
-// Initialize the SDK with your API key
+// Initialize hotel details search
 
 async function searchHotelRate() {
     document.getElementById("loader").style.display = "block";
@@ -22,8 +22,6 @@ async function searchHotelRate() {
             `http://localhost:3000/search-rates?checkin=${checkin}&checkout=${checkout}&adults=${adults}&hotelId=${hotelId}`
         );
         const data = await response.json();
-        console.log(data);
-
         const hotelInfo = data.hotelInfo;
         const rateInfo = data.rateInfo;
 
@@ -44,8 +42,6 @@ async function searchHotelRate() {
 
 function displayHotelDetails(hotelInfo) {
     const hotelsDiv = document.getElementById("hotels");
-    console.log(hotelInfo);
-
     // Ensure to use hotelInfo for accessing hotel properties
     const mainImage = hotelInfo.hotelImages.find(image => image.defaultImage === true)?.url || hotelInfo.hotelImages?.[0]?.url || 'defaultImageUrl';
     // Determine the correct facilities array and take the first 10 items
@@ -103,8 +99,13 @@ function displayRates(rateInfo) {
             refundableTag.textContent = `Refundable: ${rate.refundableTag}`;
             rateDiv.appendChild(refundableTag);
 
+            const originalRate = document.createElement('p');
+            originalRate.textContent = `Public Rate: $${rate.originalRate}`;
+            originalRate.style.textDecoration = "line-through";  // Apply strikethrough styling
+            rateDiv.appendChild(originalRate);
+
             const retailRate = document.createElement('p');
-            retailRate.textContent = `Rate: $${rate.retailRate}`;
+            retailRate.textContent = `Promotional rate: $${rate.retailRate}`;
             rateDiv.appendChild(retailRate);
 
             const bookButton = document.createElement('button');
@@ -177,7 +178,6 @@ async function proceedToBooking(rateId) {
             if (voucher) {
                 bodyData.voucherCode = voucher;
             }
-            console.log(bodyData);
 
             const prebookResponse = await fetch(`http://localhost:3000/prebook`, {
                 method: "POST",

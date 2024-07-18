@@ -56,10 +56,18 @@ app.get("/search-rates", async (req, res) => {
 
 	try {
 		// Fetch rates only for the specified hotel
-		const ratesResponse = await sdk.getFullRates(checkin, checkout, "USD", "US", [hotelId], adults);
-		const rates = ratesResponse.data; // This should contain the rate details
+		const rates = (
+			await sdk.getFullRates({
+				hotelIds: [hotelId],
+				occupancies: [{ adults: parseInt(adults, 10) }],
+				currency: 'USD',
+				guestNationality: 'US',
+				checkin: checkin,
+				checkout: checkout
+			})
+		).data;
 
-		// Assuming you have a function or method to fetch the hotel data
+		// Fetch hotel details
 		const hotelsResponse = await sdk.getHotelDetails(hotelId);
 		const hotelInfo = hotelsResponse.data;
 
@@ -93,7 +101,8 @@ app.get("/search-rates", async (req, res) => {
 							offerId: roomType.offerId,
 							board: rate.boardName,
 							refundableTag: rate.cancellationPolicies.refundableTag,
-							retailRate: rate.retailRate.total[0].amount
+							retailRate: rate.retailRate.total[0].amount,
+							originalRate:rate.retailRate.suggestedSellingPrice[0].amount
 						};
 					}
 					return null; // or some default object if no rates meet the criteria
