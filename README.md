@@ -7,5 +7,12 @@
 
 ## Run
 
+1. Copy `.env.example` to `.env` and add your LiteAPI keys for production and sandbox.
 1. Run `npm run start` to start the server.
 2. Access http://localhost:3000/ in your browser.
+
+---
+
+## Documentation
+
+Access the [LiteAPI documentation](https://docs.liteapi.travel/reference/overview) to learn more about the API.
